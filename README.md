@@ -18,7 +18,7 @@ The app is not signed with an Apple Developer ID yet. That costs money and takes
 
 **macOS 15 (Sequoia) and later**
 
-1. Double-click Poddle Helper. macOS says it cannot verify the app. Click **Done**.
+1. Double-click Poddle Helper. macOS says Apple could not verify it is free of malware. Click **Done**, not Move to Trash (if you already trashed it, download it again).
 2. Open **System Settings > Privacy & Security**.
 3. Scroll down. Next to "Poddle Helper was blocked", click **Open Anyway**.
 4. Enter your password, then click **Open Anyway** again.
