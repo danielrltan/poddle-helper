@@ -6,7 +6,8 @@
 //   3. While at least one Poddle page is connected, it reads headphone motion from CoreMotion
 //      and sends each sample to the page as one small JSON message. When the last page
 //      disconnects, it stops reading motion.
-//   4. A menu bar icon that shows what is going on.
+//   4. While a page is connected, the Mac's sound is moved off the AirPods (Sound.swift): the AirPod is the paddle.
+//   5. A menu bar icon that shows what is going on.
 //
 // It never opens a connection to the internet. It reads nothing except headphone motion.
 
@@ -229,7 +230,7 @@ final class Motion: NSObject, CMHeadphoneMotionManagerDelegate {
             } else if self.samples == lastCount {
                 self.problem = self.budsConnected
                     ? "No motion. Turn off Automatic Ear Detection"
-                    : "AirPods not found. Connect them as sound output"
+                    : "AirPods not found. Connect them to this Mac"
                 log("no samples in 4s: \(self.problem!)")
             } else {
                 self.problem = nil
@@ -282,9 +283,11 @@ final class Motion: NSObject, CMHeadphoneMotionManagerDelegate {
 final class App: NSObject, NSApplicationDelegate {
     let server = Server()
     let motion = Motion()
+    let sound = SoundRoute()
     let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
     let statusLine = NSMenuItem(title: "", action: nil, keyEquivalent: "")
     let settingsItem = NSMenuItem(title: "Turn on Motion access…", action: #selector(openMotionSettings), keyEquivalent: "")
+    let soundItem = NSMenuItem(title: "Play sound through speakers", action: #selector(toggleSound), keyEquivalent: "")
     var serverError: String?
 
     func applicationDidFinishLaunching(_ note: Notification) {
@@ -301,6 +304,9 @@ final class App: NSObject, NSApplicationDelegate {
         settingsItem.target = self
         menu.addItem(settingsItem)
         menu.addItem(.separator())
+        soundItem.target = self
+        menu.addItem(soundItem)
+        menu.addItem(.separator())
         menu.addItem(item("Open Poddle", #selector(openPoddle)))
         menu.addItem(item("About / View source", #selector(openSource)))
         menu.addItem(.separator())
@@ -310,11 +316,13 @@ final class App: NSObject, NSApplicationDelegate {
         server.onClientsChanged = { [unowned self] in
             log("clients connected: \(server.clientCount)")
             if server.clientCount > 0 { motion.start() } else { motion.stop() }
+            sound.setActive(server.clientCount > 0)
             refresh()
         }
         server.onError = { [unowned self] msg in serverError = msg; refresh() }
         motion.onSample = { [unowned self] json in server.broadcast(json) }
         motion.onStatus = { [unowned self] in refresh() }
+        sound.onChange = { [unowned self] in refresh() }
         server.start()
         refresh()
     }
@@ -343,10 +351,15 @@ final class App: NSObject, NSApplicationDelegate {
         }
         statusLine.title = text
         settingsItem.isHidden = !motion.accessDenied
+        soundItem.state = sound.enabled ? .on : .off
+        soundItem.title = sound.playingOn.map { "Playing sound through \($0)" } ?? "Play sound through speakers"
     }
+
+    func applicationWillTerminate(_ note: Notification) { sound.release() }
 
     @objc func openPoddle() { NSWorkspace.shared.open(poddleURL) }
     @objc func openSource() { NSWorkspace.shared.open(sourceURL) }
+    @objc func toggleSound() { sound.enabled.toggle(); refresh() }
     @objc func openMotionSettings() { NSWorkspace.shared.open(motionSettingsURL) }
 }
 

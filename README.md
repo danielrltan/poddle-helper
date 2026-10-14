@@ -41,6 +41,14 @@ If you would rather not trust a download, you can read the code and build the ap
 
 Click the menu bar icon to see what is happening, for example "Waiting for Poddle to connect" or "Streaming from left AirPod".
 
+## Sound
+
+The AirPod in your hand is the paddle, so the game's sound should not play in it. While a Poddle page is connected, if your Mac's sound output is your AirPods, the app moves it to another output: the built-in speakers first, then USB, then a display (HDMI, DisplayPort, Thunderbolt), then another Bluetooth speaker. It never picks a virtual device (like a recorder or a call app's) or AirPlay. When you close the page or quit the app, the sound goes back to your AirPods, unless you picked another output yourself in the meantime. If your Mac has no other output, nothing changes.
+
+Headphone motion keeps working when the AirPods are not the sound output. They only need to be connected.
+
+To keep the sound on your AirPods, click the menu bar icon and untick **Play sound through speakers**.
+
 ## What it reads
 
 Only headphone motion, from Apple's CoreMotion headphone motion API:
@@ -62,7 +70,7 @@ Only to web pages on your own Mac:
 - It only answers web pages from Poddle: `https://poddleball.com`, `https://www.poddleball.com` and `https://poddle.fly.dev`. It also answers `http://localhost`, for people working on Poddle itself. Any other website is refused. Browsers tell the app which site a page comes from (the Origin header), and websites cannot fake it.
 - The app itself never connects to the internet. There is no analytics, no update check, and no tracking. "Open Poddle" and "About / View source" in the menu open pages in your browser.
 
-All of this is in one file: [`Sources/main.swift`](Sources/main.swift). It is under 400 lines.
+All of this is in [`Sources/main.swift`](Sources/main.swift), under 400 lines. Moving the sound is in [`Sources/Sound.swift`](Sources/Sound.swift).
 
 ## Permissions it asks for
 
@@ -72,7 +80,7 @@ All of this is in one file: [`Sources/main.swift`](Sources/main.swift). It is un
 ## Requirements
 
 - macOS 14 or later, on Apple silicon or Intel.
-- AirPods Pro, AirPods 3, AirPods 4 or AirPods Max, connected to the Mac as the sound output.
+- AirPods Pro, AirPods 3, AirPods 4 or AirPods Max, connected to the Mac.
 - Automatic Ear Detection turned off, so motion keeps flowing when the AirPod is out of your ear. Go to System Settings > Bluetooth, click the ⓘ next to your AirPods, and turn off Automatic Ear Detection.
 
 ## Uninstall
@@ -90,7 +98,7 @@ cd poddle-helper
 open "build/Poddle Helper.app"
 ```
 
-`build.sh` compiles `Sources/main.swift` for Apple silicon and Intel, puts the app together, signs it locally (ad hoc), and zips it to `dist/Poddle-Helper.zip`.
+`build.sh` compiles `Sources/` for Apple silicon and Intel, puts the app together, signs it locally (ad hoc), and zips it to `dist/Poddle-Helper.zip`.
 
 For testing without AirPods, `PODDLE_HELPER_FAKE=1` sends made-up motion, and `PODDLE_HELPER_PORT` changes the port:
 
