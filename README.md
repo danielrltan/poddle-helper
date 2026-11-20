@@ -1,12 +1,12 @@
 # Poddle Helper
 
-Poddle Helper is a small, open-source Mac app. It lets [Poddle](https://poddleball.com) use one of your AirPods as your paddle.
+Poddle Helper is a small, open-source Mac app. It lets [Poddle](https://playpoddle.com) use one of your AirPods as your paddle.
 
 Most people do not need it. You can play Poddle with your phone as the paddle, and that needs nothing installed. This app is only for playing with an AirPod on a Mac.
 
 ## Download
 
-Download: https://poddleball.com/download/Poddle-Helper.zip
+Download: https://playpoddle.com/download/Poddle-Helper.zip
 
 Or from the Releases page: https://github.com/danielrltan/poddle-helper/releases/latest/download/Poddle-Helper.zip
 
@@ -35,7 +35,7 @@ If you would rather not trust a download, you can read the code and build the ap
 ## Using it
 
 1. Open Poddle Helper. It adds an AirPod icon to the menu bar. It has no window and no Dock icon.
-2. Open [poddleball.com](https://poddleball.com) and choose to play with an AirPod.
+2. Open [playpoddle.com](https://playpoddle.com) and choose to play with an AirPod.
 3. The first time, macOS asks to allow Motion & Fitness access. Click **Allow**.
 4. Take one AirPod out of your ear and hold it. That is your paddle.
 
@@ -67,7 +67,7 @@ It only reads motion while a Poddle page is connected to it. When you close the 
 Only to web pages on your own Mac:
 
 - It listens on `127.0.0.1:8787` (and `[::1]:8787`). Those addresses only exist inside your Mac. Other computers on your network, or on the internet, cannot reach it.
-- It only answers web pages from Poddle: `https://poddleball.com`, `https://www.poddleball.com` and `https://poddle.fly.dev`. It also answers `http://localhost`, for people working on Poddle itself. Any other website is refused. Browsers tell the app which site a page comes from (the Origin header), and websites cannot fake it.
+- It only answers web pages from Poddle: `https://playpoddle.com` and `https://www.playpoddle.com`. The old addresses `https://poddleball.com`, `https://www.poddleball.com` and `https://poddle.fly.dev` are still accepted. It also answers `http://localhost`, for people working on Poddle itself. Any other website is refused. Browsers tell the app which site a page comes from (the Origin header), and websites cannot fake it.
 - The app itself never connects to the internet. There is no analytics, no update check, and no tracking. "Open Poddle" and "About / View source" in the menu open pages in your browser.
 
 All of this is in [`Sources/main.swift`](Sources/main.swift), under 400 lines. Moving the sound is in [`Sources/Sound.swift`](Sources/Sound.swift).
@@ -75,7 +75,7 @@ All of this is in [`Sources/main.swift`](Sources/main.swift), under 400 lines. M
 ## Permissions it asks for
 
 - **Motion & Fitness.** This is what macOS calls headphone motion access. You can turn it off any time in System Settings > Privacy & Security > Motion & Fitness.
-- In Chrome, poddleball.com may ask to "access other apps and services on this device" or to connect to devices on your local network. That is the Poddle page reaching this app on your Mac. The app itself does not ask for network access.
+- In Chrome, playpoddle.com may ask to "access other apps and services on this device" or to connect to devices on your local network. That is the Poddle page reaching this app on your Mac. The app itself does not ask for network access.
 
 ## Requirements
 

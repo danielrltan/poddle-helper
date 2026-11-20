@@ -1,4 +1,4 @@
-// Poddle Helper: lets the Poddle web page (https://poddleball.com) read one AirPod's motion.
+// Poddle Helper: lets the Poddle web page (https://playpoddle.com) read one AirPod's motion.
 //
 // What this file does, top to bottom:
 //   1. A WebSocket server on 127.0.0.1 and ::1 only (never reachable from other machines).
@@ -21,7 +21,7 @@ let env = ProcessInfo.processInfo.environment
 let port = UInt16(env["PODDLE_HELPER_PORT"] ?? "") ?? 8787
 let fakeMotion = env["PODDLE_HELPER_FAKE"] == "1"   // test hook: synthetic samples, no AirPods needed
 
-let poddleURL = URL(string: "https://poddleball.com")!
+let poddleURL = URL(string: "https://playpoddle.com")!
 let sourceURL = URL(string: "https://github.com/danielrltan/poddle-helper")!
 let motionSettingsURL = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Motion")!
 
@@ -35,7 +35,7 @@ func originAllowed(_ origin: String?) -> Bool {
     guard let origin = origin else { return true }
     guard let url = URLComponents(string: origin), let host = url.host?.lowercased() else { return false }
     switch url.scheme?.lowercased() {
-    case "https": return url.port == nil && ["poddleball.com", "www.poddleball.com", "poddle.fly.dev"].contains(host)
+    case "https": return url.port == nil && ["playpoddle.com", "www.playpoddle.com", "poddleball.com", "www.poddleball.com", "poddle.fly.dev"].contains(host)
     case "http":  return ["localhost", "127.0.0.1"].contains(host)
     default:      return false
     }
